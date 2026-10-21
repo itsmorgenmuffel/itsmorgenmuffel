@@ -8,15 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  /* ===== FARBEN: hier kannst du das Farbschema ändern ===== */
   :root{
-    --bg:#0e0f1c;          /* Hintergrund */
-    --panel:#161830;       /* Karten / Flächen */
-    --line:#262a4d;        /* Rahmenlinien */
-    --text:#e6e8f5;        /* Haupttext */
-    --muted:#9096b8;       /* Nebentext */
-    --accent:#8b7cff;      /* Akzent 1: Violett */
-    --accent2:#5df2c0;     /* Akzent 2: Mint-Grün (Terminal) */
+    --bg:#0e0f1c; --panel:#161830; --line:#262a4d;
+    --text:#e6e8f5; --muted:#9096b8; --accent:#8b7cff; --accent2:#5df2c0;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
@@ -30,23 +24,17 @@
   h2{font-size:1.8rem;margin-bottom:1.25rem}
   p{max-width:65ch}
   .muted{color:var(--muted)}
-
-  /* Navigation */
   nav{position:sticky;top:0;z-index:5;background:rgba(14,15,28,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
   nav .wrap{display:flex;justify-content:space-between;align-items:center;height:3.5rem}
   nav a{text-decoration:none;color:var(--muted);margin-left:1.25rem;font-size:.95rem}
   nav a:hover{color:var(--text)}
   nav .logo{color:var(--text);font-weight:700;margin:0}
-
-  /* Hero */
   .hero{padding:5rem 0 3rem}
   .hero .bio{font-size:1.2rem;color:var(--muted);margin:1rem 0 1.75rem}
   .btn{display:inline-block;padding:.65rem 1.2rem;border-radius:8px;border:1px solid var(--line);text-decoration:none;font-weight:500;margin:0 .6rem .6rem 0;transition:border-color .2s,background .2s}
   .btn:hover{border-color:var(--accent)}
   .btn.primary{background:var(--accent);border-color:var(--accent);color:#12102b}
   .btn.primary:hover{background:#a094ff}
-
-  /* Terminal */
   .term{background:#0a0b16;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 24px 60px rgba(139,124,255,.12)}
   .term-bar{display:flex;align-items:center;gap:.45rem;padding:.65rem .9rem;background:var(--panel);border-bottom:1px solid var(--line)}
   .dot{width:12px;height:12px;border-radius:50%}
@@ -59,8 +47,6 @@
   .chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
   .chip{background:var(--panel);border:1px solid var(--line);color:var(--accent2);border-radius:999px;padding:.3rem .85rem;font:400 .82rem "JetBrains Mono",monospace;cursor:pointer}
   .chip:hover{border-color:var(--accent2)}
-
-  /* Projekte */
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1.5rem;display:flex;flex-direction:column;gap:.75rem}
   .card h3{font-size:1.25rem}
@@ -70,20 +56,18 @@
   .card a.repo{color:var(--accent2);text-decoration:none;font-weight:500}
   .card a.repo:hover{text-decoration:underline}
   .card.empty{border-style:dashed;background:transparent;justify-content:center}
-
   footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--muted);font-size:.9rem}
   footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem}
-  footer a{margin-left:1rem;text-decoration:none} footer a:hover{color:var(--text)}
-
-  @media (max-width:560px){ nav .links a:not(.logo){margin-left:.8rem} #out{height:300px} }
-  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} *{transition:none!important} }
+  footer a{margin-left:1rem;text-decoration:none}
+  footer a:hover{color:var(--text)}
+  @media (max-width:560px){nav .links a{margin-left:.55rem;font-size:.82rem} #out{height:300px}}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{transition:none!important}}
 </style>
 </head>
 <body>
-
 <nav>
   <div class="wrap">
-    <a class="logo" href="#top" data-fill="name">Dein Name</a>
+    <a class="logo" href="#top" data-fill="name">Levani Samkharadze</a>
     <div class="links"><a href="#about">Über mich</a><a href="#demo">Demo</a><a href="#projects">Projekte</a></div>
   </div>
 </nav>
@@ -100,7 +84,6 @@
 <section id="about" style="padding-top:2rem">
   <div class="wrap">
     <h2>Über mich</h2>
-    <!-- ✏️ ÜBER MICH: Ersetze den Text hier durch deinen eigenen -->
     <p>Mich fasziniert Programmierung nah an der Hardware: Ich möchte genau verstehen, was im Speicher passiert. Pointer, Structs und manuelle Speicherverwaltung in C sind für mich keine Hürde, sondern der spannendste Teil des Programmierens.</p>
   </div>
 </section>
@@ -109,14 +92,15 @@
   <div class="wrap">
     <h2>Live-Demo: meine Projekte im Terminal</h2>
     <p class="muted" style="margin-bottom:1.25rem">Tippe einen Befehl ein oder klicke auf einen der Vorschläge.</p>
-    <div class="term" onclick="document.getElementById('in').focus()">
+    <div class="term" id="terminal">
       <div class="term-bar">
         <span class="dot" style="background:#ff6b7a"></span><span class="dot" style="background:#ffd166"></span><span class="dot" style="background:#5df2c0"></span>
         <span class="title" id="termTitle">gast@portfolio: ~</span>
       </div>
       <div id="out" aria-live="polite"></div>
       <div class="inputline"><span class="prompt" id="prompt">gast@portfolio:~$</span>
-        <input id="in" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal-Eingabe"></div>
+        <input id="in" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal-Eingabe">
+      </div>
     </div>
     <div class="chips" id="chips"></div>
   </div>
@@ -131,189 +115,278 @@
 
 <footer>
   <div class="wrap">
-    <span>© <span id="year"></span> <span data-fill="name">Dein Name</span></span>
+    <span>© <span id="year"></span> <span data-fill="name">Levani Samkharadze</span></span>
     <span><a data-href="github" target="_blank" rel="noopener">GitHub</a><a data-href="linkedin" target="_blank" rel="noopener">LinkedIn</a></span>
   </div>
 </footer>
 
 <script>
-/* =====================================================================
-   ✏️ HIER PASSEST DU ALLES AN – der Rest der Datei kann so bleiben.
-   ===================================================================== */
+"use strict";
+
 const CONFIG = {
   name: "Levani Samkharadze",
   bio: "Computer Science Student @ TU Graz | C & Systems Programming Enthusiast",
   github: "https://github.com/itsmorgenmuffel",
-  githubUser: "itsmorgenmuffel",   // dein GitHub-Benutzername
+  githubUser: "itsmorgenmuffel",
   linkedin: "https://www.linkedin.com/in/levani-samkharadze/",
-
-  /* PROJEKTE: werden automatisch aus deinen öffentlichen GitHub-Repos geladen (ohne Forks). */
-  loadRepos: true,                          // false = Repos nicht laden
-  hideRepos: ["itsmorgenmuffel.github.io"], // Repos, die NICHT erscheinen sollen (z. B. dieses Portfolio)
-
-  /* Optional: zusätzliche eigene Karten. Leer lassen = nur Repos.
-     Beispiel (die // am Anfang entfernen):
-     { title: "Mein Projekt", text: "Kurzbeschreibung", tags: ["C"], repo: "https://github.com/itsmorgenmuffel/..." }, */
-  projects: [
-  ],
-
-  /* TERMINAL-PROGRAMME: Erst eintragen, wenn die kompilierten Dateien im Ordner wasm/ liegen.
-     Der Name vor dem Doppelpunkt ist der Befehl, den Besucher eintippen.
-     Beispiel (die // am Anfang entfernen):
-     run_spritzerstand: { js: "wasm/spritzerstand.js", factory: "createSpritzerstand", args: [], info: "Spritzerstand starten" }, */
+  loadRepos: true,
+  hideRepos: ["itsmorgenmuffel.github.io"],
+  projects: [],
   programs: {
-  run_gross_net: {
-    js: "wasm/gross-net.js",
-    factory: "createGrossNet",
-    args: [],
-    info: "Gross-Net Calculator starten"
+    run_gross_net: {
+      js: "wasm/gross-net.js",
+      factory: "createGrossNet",
+      args: [],
+      info: "Gross-Net Calculator starten"
+    }
   }
-}
-}
 };
 
-/* =====================================================================
-   AB HIER MUSS NICHTS GEÄNDERT WERDEN
-   ===================================================================== */
-document.querySelectorAll("[data-fill]").forEach(e => e.textContent = CONFIG[e.dataset.fill]);
-document.querySelectorAll("[data-href]").forEach(e => e.href = CONFIG[e.dataset.href]);
+document.querySelectorAll("[data-fill]").forEach(e => {
+  const value = CONFIG[e.dataset.fill];
+  if (value !== undefined) e.textContent = value;
+});
+document.querySelectorAll("[data-href]").forEach(e => {
+  const value = CONFIG[e.dataset.href];
+  if (value) e.href = value;
+});
 document.getElementById("year").textContent = new Date().getFullYear();
 
-function el(tag, cls, txt){ const n = document.createElement(tag); if(cls) n.className = cls; if(txt) n.textContent = txt; return n; }
-
-/* Projekt-Karten */
-const grid = document.getElementById("grid");
-const canLoad = CONFIG.loadRepos && CONFIG.githubUser;
-const ph = el("article","card empty");
-const phText = el("p", null, canLoad ? "Projekte werden geladen ..." : "Noch keine Projekte.");
-ph.append(phText);
-let projectLines = null;   // Text für den Terminal-Befehl "projects"
-
-function addCard(title, text, tags, url){
-  const c = el("article","card");
-  c.append(el("h3",null,title), el("p",null,text));
-  const t = el("div","tags"); tags.forEach(x => t.append(el("span","tag",x))); c.append(t);
-  const a = el("a","repo","Zum GitHub-Repo"); a.href = url; a.target = "_blank"; a.rel = "noopener"; c.append(a);
-  grid.insertBefore(c, ph);
+function el(tag, cls, txt) {
+  const node = document.createElement(tag);
+  if (cls) node.className = cls;
+  if (txt !== undefined) node.textContent = txt;
+  return node;
 }
-CONFIG.projects.forEach(p => addCard(p.title, p.text, p.tags, p.repo));
-grid.append(ph);
-const manualLines = CONFIG.projects.map(p => "  " + p.title);
-if (!canLoad) projectLines = manualLines;
-if (CONFIG.projects.length && !canLoad) ph.remove();
 
-if (canLoad) {
-  fetch("https://api.github.com/users/" + CONFIG.githubUser + "/repos?sort=updated&per_page=30")
-    .then(r => r.ok ? r.json() : Promise.reject())
+/* GitHub-Projekte */
+const grid = document.getElementById("grid");
+const canLoadRepos = CONFIG.loadRepos && Boolean(CONFIG.githubUser);
+const placeholder = el("article", "card empty");
+const placeholderText = el("p", null, canLoadRepos ? "Projekte werden geladen ..." : "Noch keine Projekte.");
+placeholder.append(placeholderText);
+grid.append(placeholder);
+
+let projectLines = null;
+
+function addCard(title, description, tags, url) {
+  const card = el("article", "card");
+  card.append(el("h3", null, title), el("p", null, description));
+  const tagContainer = el("div", "tags");
+  tags.forEach(tag => tagContainer.append(el("span", "tag", tag)));
+  card.append(tagContainer);
+  const link = el("a", "repo", "Zum GitHub-Repo");
+  link.href = url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  card.append(link);
+  grid.insertBefore(card, placeholder);
+}
+
+CONFIG.projects.forEach(project => {
+  addCard(project.title, project.text, project.tags || [], project.repo);
+});
+const manualLines = CONFIG.projects.map(project => "  " + project.title);
+
+if (!canLoadRepos) {
+  projectLines = manualLines;
+  if (CONFIG.projects.length) placeholder.remove();
+}
+
+if (canLoadRepos) {
+  fetch("https://api.github.com/users/" + encodeURIComponent(CONFIG.githubUser) + "/repos?sort=updated&per_page=30")
+    .then(response => {
+      if (!response.ok) throw new Error("GitHub API request failed");
+      return response.json();
+    })
     .then(repos => {
-      const known = CONFIG.projects.map(p => p.repo.toLowerCase());
-      const list = repos.filter(r => !r.fork && !known.includes(r.html_url.toLowerCase()) && !CONFIG.hideRepos.includes(r.name));
-      list.forEach(r => addCard(r.name, r.description || "Keine Beschreibung vorhanden.", r.language ? [r.language] : [], r.html_url));
-      projectLines = manualLines.concat(list.map(r => "  " + r.name + (r.language ? "  [" + r.language + "]" : "")));
-      if (list.length || CONFIG.projects.length) ph.remove(); else phText.textContent = "Noch keine öffentlichen Repos.";
+      const known = CONFIG.projects
+        .map(project => project.repo)
+        .filter(Boolean)
+        .map(url => url.toLowerCase());
+
+      const hidden = new Set(CONFIG.hideRepos);
+      const visibleRepos = repos.filter(repo =>
+        !repo.fork &&
+        !known.includes(repo.html_url.toLowerCase()) &&
+        !hidden.has(repo.name)
+      );
+
+      visibleRepos.forEach(repo => {
+        addCard(
+          repo.name,
+          repo.description || "Keine Beschreibung vorhanden.",
+          repo.language ? [repo.language] : [],
+          repo.html_url
+        );
+      });
+
+      projectLines = manualLines.concat(
+        visibleRepos.map(repo => "  " + repo.name + (repo.language ? "  [" + repo.language + "]" : ""))
+      );
+
+      if (visibleRepos.length || CONFIG.projects.length) {
+        placeholder.remove();
+      } else {
+        placeholderText.textContent = "Noch keine öffentlichen Repos.";
+      }
     })
     .catch(() => {
-      phText.textContent = "Projekte konnten nicht geladen werden. Du findest sie auf GitHub.";
+      placeholderText.textContent = "Projekte konnten nicht geladen werden. Du findest sie auf GitHub.";
       projectLines = ["err:Projekte konnten nicht geladen werden. Siehe " + CONFIG.github];
     });
 }
 
 /* Terminal */
-const out = document.getElementById("out"), input = document.getElementById("in");
-let cmdHistory = [], hIdx = 0, busy = false;
+const out = document.getElementById("out");
+const input = document.getElementById("in");
+const chips = document.getElementById("chips");
 
-const cmds = {
+let cmdHistory = [];
+let historyIndex = 0;
+let busy = false;
+let grossNetInput = null;
+
+function line(text, cls = "") {
+  const row = el("div", cls, String(text));
+  out.append(row);
+  out.scrollTop = out.scrollHeight;
+}
+
+function styled(text) {
+  const match = text.match(/^(ok|err|dim|acc):(.*)$/);
+  line(match ? match[2] : text, match ? "l-" + match[1] : "");
+}
+
+function play(lines) {
+  busy = true;
+  let index = 0;
+
+  function next() {
+    if (index >= lines.length) {
+      busy = false;
+      input.focus();
+      return;
+    }
+    styled(lines[index++]);
+    setTimeout(next, 60);
+  }
+
+  next();
+}
+
+const commands = {
   help: () => {
-    const rows = [["about","Wer bin ich?"],["projects","Projekte auflisten"],["github","GitHub-Profil öffnen"],["clear","Terminal leeren"]]
-      .concat(Object.keys(CONFIG.programs).map(k => [k, CONFIG.programs[k].info || "Programm starten"]));
-    const l = ["Verfügbare Befehle:"].concat(rows.map(r => "acc:  " + r[0].padEnd(20) + r[1]));
-    if (!Object.keys(CONFIG.programs).length) l.push("dim:Programme zum Ausführen folgen.");
-    return l;
+    const rows = [
+      ["about", "Wer bin ich?"],
+      ["projects", "Projekte auflisten"],
+      ["github", "GitHub-Profil öffnen"],
+      ["clear", "Terminal leeren"]
+    ].concat(
+      Object.keys(CONFIG.programs).map(key => [
+        key,
+        CONFIG.programs[key].info || "Programm starten"
+      ])
+    );
+    return ["Verfügbare Befehle:"].concat(
+      rows.map(row => "acc:  " + row[0].padEnd(20) + row[1])
+    );
   },
-  about: () => ["acc:" + CONFIG.name, CONFIG.bio, "dim:Tipp: help zeigt alle Befehle."],
-  projects: () => projectLines === null ? ["dim:Projekte werden noch geladen ..."]
-                : projectLines.length ? projectLines : ["dim:Noch keine Projekte."]
+  about: () => [
+    "acc:" + CONFIG.name,
+    CONFIG.bio,
+    "dim:Tipp: help zeigt alle Befehle."
+  ],
+  projects: () => projectLines === null
+    ? ["dim:Projekte werden noch geladen ..."]
+    : projectLines.length
+      ? projectLines
+      : ["dim:Noch keine Projekte."]
 };
 
-function line(text, cls){
-  const d = el("div", cls); d.textContent = text; out.append(d); out.scrollTop = out.scrollHeight;
-}
-function styled(s){
-  const m = s.match(/^(ok|err|dim|acc):(.*)$/);
-  line(m ? m[2] : s, m ? "l-" + m[1] : "");
-}
-function play(lines){
-  busy = true; let i = 0;
-  (function next(){
-    if(i >= lines.length){ busy = false; return; }
-    styled(lines[i++]); setTimeout(next, 120);
-  })();
-}
+function runWasm(key, argsOverride = null) {
+  const program = CONFIG.programs[key];
+  if (!program) {
+    line("Programmkonfiguration nicht gefunden: " + key, "l-err");
+    return;
+  }
 
-/* Startet ein echtes, mit Emscripten kompiliertes C-Programm */
-function runWasm(key, argsOverride){
-  const w = CONFIG.programs[key];
   busy = true;
-
   const start = () => {
-    window[w.factory]({
-      print: t => line(t),
-      printErr: t => line(t, "l-err"),
-      arguments: argsOverride || w.args || []
-    }).then(() => {
+    const factory = window[program.factory];
+    if (typeof factory !== "function") {
       busy = false;
-      styled("dim:[Programm beendet]");
-    }).catch(e => {
+      line("Emscripten-Funktion nicht gefunden: " + program.factory, "l-err");
+      return;
+    }
+
+    try {
+      factory({
+        print: text => line(text),
+        printErr: text => line(text, "l-err"),
+        arguments: argsOverride || program.args || []
+      }).then(() => {
+        busy = false;
+        line("[Programm beendet]", "l-dim");
+        input.focus();
+      }).catch(error => {
+        busy = false;
+        line("Fehler beim Ausführen: " + error.message, "l-err");
+        input.focus();
+      });
+    } catch (error) {
       busy = false;
-      line("Fehler beim Ausführen: " + e, "l-err");
-    });
+      line("Fehler beim Starten: " + error.message, "l-err");
+      input.focus();
+    }
   };
 
-  if (window[w.factory]) {
+  if (typeof window[program.factory] === "function") {
     start();
     return;
   }
 
-  const s = document.createElement("script");
-  s.src = w.js;
-  s.onload = start;
-  s.onerror = () => {
-    s.remove();
+  const script = document.createElement("script");
+  script.src = program.js;
+  script.onload = start;
+  script.onerror = () => {
     busy = false;
-    line("Datei " + w.js + " nicht gefunden.", "l-err");
+    line("Datei " + program.js + " konnte nicht geladen werden.", "l-err");
+    input.focus();
   };
-
-  document.body.append(s);
+  document.body.append(script);
 }
-
-let grossNetInput = null;
 
 function startGrossNet() {
   line("Gross-Net Calculator", "l-acc");
   line("Your monthly gross income:");
-
-  grossNetInput = {
-    step: "income"
-  };
+  grossNetInput = { step: "income", income: "" };
+  input.focus();
 }
 
 function handleGrossNetInput(value) {
   line("gast@portfolio:~$ " + value, "l-cmd");
 
+  if (!grossNetInput) return;
+
   if (grossNetInput.step === "income") {
     const income = value.trim();
-if (
-  !/^\d+([.,]\d{1,2})?$/.test(income) ||
-  Number(income.replace(",", ".")) > 5000000
-) {
-  line("Invalid input! Enter an amount between 0 and 5000000.", "l-err");
+    const normalizedIncome = income.replace(",", ".");
+    const amount = Number(normalizedIncome);
+
+    if (
+      !/^\d+(?:[.,]\d{1,2})?$/.test(income) ||
+      !Number.isFinite(amount) ||
+      amount < 0 ||
+      amount > 5000000
+    ) {
+      line("Invalid input! Enter an amount between 0 and 5000000.", "l-err");
       line("Your monthly gross income:");
       return;
     }
 
-    grossNetInput.income = income.replace(",", ".");
+    grossNetInput.income = normalizedIncome;
     grossNetInput.step = "children";
-
     line("Children in household? (y/n):");
     return;
   }
@@ -327,34 +400,32 @@ if (
       return;
     }
 
-    const args = [
-      grossNetInput.income,
-      answer === "y" ? "1" : "0"
-    ];
-
+    const args = [grossNetInput.income, answer === "y" ? "1" : "0"];
     grossNetInput = null;
     runWasm("run_gross_net", args);
   }
 }
 
 function run(raw) {
-  const cmd = raw.trim();
-  if (!cmd) return;
+  const commandText = raw.trim();
+  if (!commandText) return;
 
-  line("gast@portfolio:~$ " + cmd, "l-cmd");
-  cmdHistory.push(cmd);
-  hIdx = cmdHistory.length;
+  line("gast@portfolio:~$ " + commandText, "l-cmd");
+  cmdHistory.push(commandText);
+  historyIndex = cmdHistory.length;
 
-  const key = cmd.toLowerCase();
+  const key = commandText.toLowerCase();
 
   if (key === "clear") {
     out.textContent = "";
+    input.focus();
     return;
   }
 
   if (key === "github") {
     line("Öffne " + CONFIG.github + " ...", "l-ok");
-    window.open(CONFIG.github, "_blank", "noopener");
+    window.open(CONFIG.github, "_blank", "noopener,noreferrer");
+    input.focus();
     return;
   }
 
@@ -368,51 +439,55 @@ function run(raw) {
     return;
   }
 
-  if (cmds[key]) {
-    play(cmds[key]());
+  if (commands[key]) {
+    play(commands[key]());
     return;
   }
 
-  line("Befehl nicht gefunden: " + cmd + ". Tippe help für eine Liste.", "l-err");
+  line("Befehl nicht gefunden: " + commandText + ". Tippe help für eine Liste.", "l-err");
 }
 
-input.addEventListener("keydown", e => {
-  if(e.key === "Enter" && !busy){
+input.addEventListener("keydown", event => {
+  if (event.key === "Enter" && !busy) {
+    event.preventDefault();
     const value = input.value;
     input.value = "";
 
-    if(grossNetInput){
+    if (grossNetInput) {
       handleGrossNetInput(value);
     } else {
       run(value);
     }
-  }
-  else if(e.key === "ArrowUp"){
-    e.preventDefault();
-
-    if(hIdx > 0){
-      input.value = cmdHistory[--hIdx];
-    }
-  }
-  else if(e.key === "ArrowDown"){
-    e.preventDefault();
-
-    input.value = hIdx < cmdHistory.length - 1
-      ? cmdHistory[++hIdx]
-      : (hIdx = cmdHistory.length, "");
+  } else if (event.key === "ArrowUp") {
+    event.preventDefault();
+    if (historyIndex > 0) input.value = cmdHistory[--historyIndex];
+  } else if (event.key === "ArrowDown") {
+    event.preventDefault();
+    input.value = historyIndex < cmdHistory.length - 1
+      ? cmdHistory[++historyIndex]
+      : (historyIndex = cmdHistory.length, "");
+  } else if (event.key === "Escape" && grossNetInput) {
+    grossNetInput = null;
+    line("Eingabe abgebrochen.", "l-dim");
   }
 });
 
-["help", "about", "projects"].concat(Object.keys(CONFIG.programs)).forEach(c => {
-  const b = el("button", "chip", c);
-  b.type = "button";
-  b.addEventListener("click", () => {
-    if (!busy) run(c);
+["help", "about", "projects", ...Object.keys(CONFIG.programs)].forEach(command => {
+  const button = el("button", "chip", command);
+  button.type = "button";
+  button.addEventListener("click", () => {
+    if (busy) return;
+    if (grossNetInput) {
+      line("Bitte beende zuerst die aktuelle Eingabe oder drücke Escape zum Abbrechen.", "l-err");
+      return;
+    }
+    run(command);
   });
-  document.getElementById("chips").append(b);
+  chips.append(button);
 });
 
 line("Willkommen! Tippe help, um zu starten.", "l-ok");
+input.focus();
 </script>
 </body>
 </html>
