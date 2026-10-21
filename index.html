@@ -108,7 +108,7 @@
 <section id="demo" style="padding-top:2rem">
   <div class="wrap">
     <h2>Live-Demo: meine Projekte im Terminal</h2>
-    <p class="muted" style="margin-bottom:1.25rem">Tippe einen Befehl ein oder klicke auf einen der Vorschläge. Die Ausgaben sind eine Simulation meiner C-Programme.</p>
+    <p class="muted" style="margin-bottom:1.25rem">Tippe einen Befehl ein oder klicke auf einen der Vorschläge.</p>
     <div class="term" onclick="document.getElementById('in').focus()">
       <div class="term-bar">
         <span class="dot" style="background:#ff6b7a"></span><span class="dot" style="background:#ffd166"></span><span class="dot" style="background:#5df2c0"></span>
@@ -141,59 +141,27 @@
    ✏️ HIER PASSEST DU ALLES AN – der Rest der Datei kann so bleiben.
    ===================================================================== */
 const CONFIG = {
-  name: "Dein Name",
+  name: "Levani Samkharadze",
   bio: "Computer Science Student @ TU Graz | C & Systems Programming Enthusiast",
   github: "https://github.com/itsmorgenmuffel",
-  githubUser: "itsmorgenmuffel",   // dein GitHub-Benutzername (für das automatische Laden der Repos)
-  loadRepos: true,               // true = alle öffentlichen Repos automatisch als Karten zeigen, false = aus
-  hideRepos: [],                 // Repos, die NICHT erscheinen sollen, z. B. ["DEIN-USERNAME.github.io", "test"]
+  githubUser: "itsmorgenmuffel",   // dein GitHub-Benutzername
   linkedin: "https://www.linkedin.com/in/levani-samkharadze/",
 
-  /* Projekt-Karten. Neues Projekt = einfach einen Block { ... }, kopieren. */
+  /* PROJEKTE: werden automatisch aus deinen öffentlichen GitHub-Repos geladen (ohne Forks). */
+  loadRepos: true,                          // false = Repos nicht laden
+  hideRepos: ["itsmorgenmuffel.github.io"], // Repos, die NICHT erscheinen sollen (z. B. dieses Portfolio)
+
+  /* Optional: zusätzliche eigene Karten. Leer lassen = nur Repos.
+     Beispiel (die // am Anfang entfernen):
+     { title: "Mein Projekt", text: "Kurzbeschreibung", tags: ["C"], repo: "https://github.com/itsmorgenmuffel/..." }, */
   projects: [
-    {
-      title: "Spritzerstand Simulator",
-      text: "Simulation eines Spritzerstands: Bestellungen, Lagerbestand und Abrechnung, komplett mit dynamischer Speicherverwaltung.",
-      tags: ["C", "Dynamic Memory", "Structs"],
-      repo: "https://github.com/DEIN-USERNAME/spritzerstand"
-    },
-    {
-      title: "ISP Library Manager",
-      text: "Bibliotheksverwaltung für die Konsole: Bücher einlesen, parsen und in Dateien speichern.",
-      tags: ["C", "File I/O", "Parsing"],
-      repo: "https://github.com/DEIN-USERNAME/isp-library"
-    }
   ],
 
-  /* Texte für das Terminal. Jede Zeile ist ein Eintrag; Präfixe:
-     "ok:" grün, "err:" rot, "dim:" grau, "acc:" violett, sonst normal. */
-  terminal: {
-    about: [
-      "acc:Dein Name",
-      "Computer Science Student @ TU Graz",
-      "Schwerpunkt: C, Speicherverwaltung, Systemprogrammierung.",
-      "dim:Tipp: help zeigt alle Befehle."
-    ],
-    run_spritzerstand: [
-      "dim:$ gcc -Wall -o spritzerstand main.c && ./spritzerstand",
-      "Spritzerstand wird eröffnet ...",
-      "dim:malloc: Lager für 4 Getränke (4 x 32 Byte) angelegt",
-      "Bestellung #1: 2 x Weißer Gspritzter   -> 5.60 EUR",
-      "Bestellung #2: 1 x Roter Gspritzter    -> 3.20 EUR",
-      "Bestellung #3: 3 x Holunder-Soda       -> 7.50 EUR",
-      "Lagerbestand: Wein 17 | Soda 24 | Holunder 9",
-      "ok:Tagesumsatz: 16.30 EUR",
-      "dim:free: Lager freigegeben, 0 Byte verloren (valgrind: clean)"
-    ],
-    run_library: [
-      "dim:$ gcc -Wall -o library main.c && ./library books.csv",
-      "Lese books.csv ...",
-      "dim:Zeile 1: \"Der Process;Kafka;1925\" -> OK",
-      "dim:Zeile 2: \"Faust;Goethe;1808\" -> OK",
-      "err:Zeile 3: Feld \"Jahr\" fehlt -> übersprungen",
-      "Bibliothek enthält 2 Bücher.",
-      "ok:Gespeichert in library.dat"
-    ]
+  /* TERMINAL-PROGRAMME: Erst eintragen, wenn die kompilierten Dateien im Ordner wasm/ liegen.
+     Der Name vor dem Doppelpunkt ist der Befehl, den Besucher eintippen.
+     Beispiel (die // am Anfang entfernen):
+     run_spritzerstand: { js: "wasm/spritzerstand.js", factory: "createSpritzerstand", args: [], info: "Spritzerstand starten" }, */
+  programs: {
   }
 };
 
@@ -204,59 +172,60 @@ document.querySelectorAll("[data-fill]").forEach(e => e.textContent = CONFIG[e.d
 document.querySelectorAll("[data-href]").forEach(e => e.href = CONFIG[e.dataset.href]);
 document.getElementById("year").textContent = new Date().getFullYear();
 
-/* Projekt-Karten bauen */
-const grid = document.getElementById("grid");
 function el(tag, cls, txt){ const n = document.createElement(tag); if(cls) n.className = cls; if(txt) n.textContent = txt; return n; }
-CONFIG.projects.forEach(p => {
-  const c = el("article","card");
-  c.append(el("h3",null,p.title), el("p",null,p.text));
-  const t = el("div","tags"); p.tags.forEach(x => t.append(el("span","tag",x))); c.append(t);
-  const a = el("a","repo","Zum GitHub-Repo"); a.href = p.repo; a.target = "_blank"; a.rel = "noopener"; c.append(a);
-  grid.append(c);
-});
-const ph = el("article","card empty");
-ph.append(el("h3",null,"Weitere Projekte folgen"), el("p",null,"Hier entsteht Platz für das nächste C-Projekt."));
-grid.append(ph);
 
-/* Alle öffentlichen Repos automatisch von GitHub laden (ohne Forks) */
-if (CONFIG.loadRepos && CONFIG.githubUser !== "DEIN-USERNAME") {
+/* Projekt-Karten */
+const grid = document.getElementById("grid");
+const canLoad = CONFIG.loadRepos && CONFIG.githubUser;
+const ph = el("article","card empty");
+const phText = el("p", null, canLoad ? "Projekte werden geladen ..." : "Noch keine Projekte.");
+ph.append(phText);
+let projectLines = null;   // Text für den Terminal-Befehl "projects"
+
+function addCard(title, text, tags, url){
+  const c = el("article","card");
+  c.append(el("h3",null,title), el("p",null,text));
+  const t = el("div","tags"); tags.forEach(x => t.append(el("span","tag",x))); c.append(t);
+  const a = el("a","repo","Zum GitHub-Repo"); a.href = url; a.target = "_blank"; a.rel = "noopener"; c.append(a);
+  grid.insertBefore(c, ph);
+}
+CONFIG.projects.forEach(p => addCard(p.title, p.text, p.tags, p.repo));
+grid.append(ph);
+const manualLines = CONFIG.projects.map(p => "  " + p.title);
+if (!canLoad) projectLines = manualLines;
+if (CONFIG.projects.length && !canLoad) ph.remove();
+
+if (canLoad) {
   fetch("https://api.github.com/users/" + CONFIG.githubUser + "/repos?sort=updated&per_page=30")
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(repos => {
       const known = CONFIG.projects.map(p => p.repo.toLowerCase());
       const list = repos.filter(r => !r.fork && !known.includes(r.html_url.toLowerCase()) && !CONFIG.hideRepos.includes(r.name));
-      list.forEach(r => {
-        const c = el("article","card");
-        c.append(el("h3",null,r.name), el("p",null,r.description || "Keine Beschreibung vorhanden."));
-        const t = el("div","tags"); if (r.language) t.append(el("span","tag",r.language)); c.append(t);
-        const a = el("a","repo","Zum GitHub-Repo"); a.href = r.html_url; a.target = "_blank"; a.rel = "noopener"; c.append(a);
-        grid.insertBefore(c, ph);
-      });
-      if (list.length) ph.remove();
-      cmds.projects = CONFIG.projects.map(p => "  " + p.title + "  [" + p.tags.join(", ") + "]")
-        .concat(list.map(r => "  " + r.name + "  [" + (r.language || "-") + "]"));
+      list.forEach(r => addCard(r.name, r.description || "Keine Beschreibung vorhanden.", r.language ? [r.language] : [], r.html_url));
+      projectLines = manualLines.concat(list.map(r => "  " + r.name + (r.language ? "  [" + r.language + "]" : "")));
+      if (list.length || CONFIG.projects.length) ph.remove(); else phText.textContent = "Noch keine öffentlichen Repos.";
     })
-    .catch(() => {});  // Bei Fehler bleiben einfach die manuellen Karten stehen
+    .catch(() => {
+      phText.textContent = "Projekte konnten nicht geladen werden. Du findest sie auf GitHub.";
+      projectLines = ["err:Projekte konnten nicht geladen werden. Siehe " + CONFIG.github];
+    });
 }
 
 /* Terminal */
 const out = document.getElementById("out"), input = document.getElementById("in");
-let history = [], hIdx = 0, busy = false;
+let cmdHistory = [], hIdx = 0, busy = false;
+
 const cmds = {
-  help: [
-    "Verfügbare Befehle:",
-    "acc:  about              Wer bin ich?",
-    "acc:  run_spritzerstand  Spritzerstand Simulator starten",
-    "acc:  run_library        ISP Library Manager starten",
-    "acc:  projects           Projekte auflisten",
-    "acc:  github             GitHub-Profil öffnen",
-    "acc:  clear              Terminal leeren"
-  ],
-  about: CONFIG.terminal.about,
-  run_spritzerstand: CONFIG.terminal.run_spritzerstand,
-  run_library: CONFIG.terminal.run_library,
-  projects: CONFIG.projects.map(p => "  " + p.title + "  [" + p.tags.join(", ") + "]"),
-  ls: ["spritzerstand/  isp-library/  README.md"]
+  help: () => {
+    const rows = [["about","Wer bin ich?"],["projects","Projekte auflisten"],["github","GitHub-Profil öffnen"],["clear","Terminal leeren"]]
+      .concat(Object.keys(CONFIG.programs).map(k => [k, CONFIG.programs[k].info || "Programm starten"]));
+    const l = ["Verfügbare Befehle:"].concat(rows.map(r => "acc:  " + r[0].padEnd(20) + r[1]));
+    if (!Object.keys(CONFIG.programs).length) l.push("dim:Programme zum Ausführen folgen.");
+    return l;
+  },
+  about: () => ["acc:" + CONFIG.name, CONFIG.bio, "dim:Tipp: help zeigt alle Befehle."],
+  projects: () => projectLines === null ? ["dim:Projekte werden noch geladen ..."]
+                : projectLines.length ? projectLines : ["dim:Noch keine Projekte."]
 };
 
 function line(text, cls){
@@ -270,25 +239,46 @@ function play(lines){
   busy = true; let i = 0;
   (function next(){
     if(i >= lines.length){ busy = false; return; }
-    styled(lines[i++]); setTimeout(next, 140);
+    styled(lines[i++]); setTimeout(next, 120);
   })();
 }
+
+/* Startet ein echtes, mit Emscripten kompiliertes C-Programm */
+function runWasm(key){
+  const w = CONFIG.programs[key]; busy = true;
+  const start = () => {
+    window[w.factory]({
+      print: t => line(t),
+      printErr: t => line(t, "l-err"),
+      arguments: w.args || []
+    }).then(() => { busy = false; styled("dim:[Programm beendet]"); })
+      .catch(e => { busy = false; line("Fehler beim Ausführen: " + e, "l-err"); });
+  };
+  if (window[w.factory]) { start(); return; }
+  const s = document.createElement("script");
+  s.src = w.js;
+  s.onload = start;
+  s.onerror = () => { s.remove(); busy = false; line("Datei " + w.js + " nicht gefunden.", "l-err"); };
+  document.body.append(s);
+}
+
 function run(raw){
   const cmd = raw.trim(); if(!cmd) return;
   line("gast@portfolio:~$ " + cmd, "l-cmd");
-  history.push(cmd); hIdx = history.length;
+  cmdHistory.push(cmd); hIdx = cmdHistory.length;
   const key = cmd.toLowerCase();
   if(key === "clear"){ out.textContent = ""; return; }
   if(key === "github"){ line("Öffne " + CONFIG.github + " ...", "l-ok"); window.open(CONFIG.github, "_blank", "noopener"); return; }
-  if(cmds[key]){ play(cmds[key]); return; }
+  if(CONFIG.programs[key]){ runWasm(key); return; }
+  if(cmds[key]){ play(cmds[key]()); return; }
   line("Befehl nicht gefunden: " + cmd + ". Tippe help für eine Liste.", "l-err");
 }
 input.addEventListener("keydown", e => {
   if(e.key === "Enter" && !busy){ run(input.value); input.value = ""; }
-  else if(e.key === "ArrowUp"){ e.preventDefault(); if(hIdx > 0) input.value = history[--hIdx]; }
-  else if(e.key === "ArrowDown"){ e.preventDefault(); input.value = hIdx < history.length - 1 ? history[++hIdx] : (hIdx = history.length, ""); }
+  else if(e.key === "ArrowUp"){ e.preventDefault(); if(hIdx > 0) input.value = cmdHistory[--hIdx]; }
+  else if(e.key === "ArrowDown"){ e.preventDefault(); input.value = hIdx < cmdHistory.length - 1 ? cmdHistory[++hIdx] : (hIdx = cmdHistory.length, ""); }
 });
-["help","about","run_spritzerstand","run_library"].forEach(c => {
+["help","about","projects"].concat(Object.keys(CONFIG.programs)).forEach(c => {
   const b = el("button","chip",c); b.type = "button";
   b.addEventListener("click", () => { if(!busy) run(c); });
   document.getElementById("chips").append(b);
