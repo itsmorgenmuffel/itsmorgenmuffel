@@ -165,9 +165,10 @@ const CONFIG = {
   run_gross_net: {
     js: "wasm/gross-net.js",
     factory: "createGrossNet",
-    args: ["3000", "0"],
+    args: [],
     info: "Gross-Net Calculator starten"
   }
+}
 }
 };
 
@@ -250,45 +251,167 @@ function play(lines){
 }
 
 /* Startet ein echtes, mit Emscripten kompiliertes C-Programm */
-function runWasm(key){
-  const w = CONFIG.programs[key]; busy = true;
+function runWasm(key, argsOverride){
+  const w = CONFIG.programs[key];
+  busy = true;
+
   const start = () => {
     window[w.factory]({
       print: t => line(t),
       printErr: t => line(t, "l-err"),
-      arguments: w.args || []
-    }).then(() => { busy = false; styled("dim:[Programm beendet]"); })
-      .catch(e => { busy = false; line("Fehler beim Ausführen: " + e, "l-err"); });
+      arguments: argsOverride || w.args || []
+    }).then(() => {
+      busy = false;
+      styled("dim:[Programm beendet]");
+    }).catch(e => {
+      busy = false;
+      line("Fehler beim Ausführen: " + e, "l-err");
+    });
   };
-  if (window[w.factory]) { start(); return; }
+
+  if (window[w.factory]) {
+    start();
+    return;
+  }
+
   const s = document.createElement("script");
   s.src = w.js;
   s.onload = start;
-  s.onerror = () => { s.remove(); busy = false; line("Datei " + w.js + " nicht gefunden.", "l-err"); };
+  s.onerror = () => {
+    s.remove();
+    busy = false;
+    line("Datei " + w.js + " nicht gefunden.", "l-err");
+  };
+
   document.body.append(s);
 }
 
-function run(raw){
-  const cmd = raw.trim(); if(!cmd) return;
+let grossNetInput = null;
+
+function startGrossNet() {
+  line("Gross-Net Calculator", "l-acc");
+  line("Your monthly gross income:");
+
+  grossNetInput = {
+    step: "income"
+  };
+}
+
+function handleGrossNetInput(value) {
+  line("gast@portfolio:~$ " + value, "l-cmd");
+
+  if (grossNetInput.step === "income") {
+    const income = value.trim();
+if (
+  !/^\d+([.,]\d{1,2})?$/.test(income) ||
+  Number(income.replace(",", ".")) > 5000000
+) {
+  line("Invalid input! Enter an amount between 0 and 5000000.", "l-err");
+      line("Your monthly gross income:");
+      return;
+    }
+
+    grossNetInput.income = income.replace(",", ".");
+    grossNetInput.step = "children";
+
+    line("Children in household? (y/n):");
+    return;
+  }
+
+  if (grossNetInput.step === "children") {
+    const answer = value.trim().toLowerCase();
+
+    if (answer !== "y" && answer !== "n") {
+      line("Invalid input! Enter y or n.", "l-err");
+      line("Children in household? (y/n):");
+      return;
+    }
+
+    const args = [
+      grossNetInput.income,
+      answer === "y" ? "1" : "0"
+    ];
+
+    grossNetInput = null;
+    runWasm("run_gross_net", args);
+  }
+}
+
+function run(raw) {
+  const cmd = raw.trim();
+  if (!cmd) return;
+
   line("gast@portfolio:~$ " + cmd, "l-cmd");
-  cmdHistory.push(cmd); hIdx = cmdHistory.length;
+  cmdHistory.push(cmd);
+  hIdx = cmdHistory.length;
+
   const key = cmd.toLowerCase();
-  if(key === "clear"){ out.textContent = ""; return; }
-  if(key === "github"){ line("Öffne " + CONFIG.github + " ...", "l-ok"); window.open(CONFIG.github, "_blank", "noopener"); return; }
-  if(CONFIG.programs[key]){ runWasm(key); return; }
-  if(cmds[key]){ play(cmds[key]()); return; }
+
+  if (key === "clear") {
+    out.textContent = "";
+    return;
+  }
+
+  if (key === "github") {
+    line("Öffne " + CONFIG.github + " ...", "l-ok");
+    window.open(CONFIG.github, "_blank", "noopener");
+    return;
+  }
+
+  if (key === "run_gross_net") {
+    startGrossNet();
+    return;
+  }
+
+  if (CONFIG.programs[key]) {
+    runWasm(key);
+    return;
+  }
+
+  if (cmds[key]) {
+    play(cmds[key]());
+    return;
+  }
+
   line("Befehl nicht gefunden: " + cmd + ". Tippe help für eine Liste.", "l-err");
 }
+
 input.addEventListener("keydown", e => {
-  if(e.key === "Enter" && !busy){ run(input.value); input.value = ""; }
-  else if(e.key === "ArrowUp"){ e.preventDefault(); if(hIdx > 0) input.value = cmdHistory[--hIdx]; }
-  else if(e.key === "ArrowDown"){ e.preventDefault(); input.value = hIdx < cmdHistory.length - 1 ? cmdHistory[++hIdx] : (hIdx = cmdHistory.length, ""); }
+  if(e.key === "Enter" && !busy){
+    const value = input.value;
+    input.value = "";
+
+    if(grossNetInput){
+      handleGrossNetInput(value);
+    } else {
+      run(value);
+    }
+  }
+  else if(e.key === "ArrowUp"){
+    e.preventDefault();
+
+    if(hIdx > 0){
+      input.value = cmdHistory[--hIdx];
+    }
+  }
+  else if(e.key === "ArrowDown"){
+    e.preventDefault();
+
+    input.value = hIdx < cmdHistory.length - 1
+      ? cmdHistory[++hIdx]
+      : (hIdx = cmdHistory.length, "");
+  }
 });
-["help","about","projects"].concat(Object.keys(CONFIG.programs)).forEach(c => {
-  const b = el("button","chip",c); b.type = "button";
-  b.addEventListener("click", () => { if(!busy) run(c); });
+
+["help", "about", "projects"].concat(Object.keys(CONFIG.programs)).forEach(c => {
+  const b = el("button", "chip", c);
+  b.type = "button";
+  b.addEventListener("click", () => {
+    if (!busy) run(c);
+  });
   document.getElementById("chips").append(b);
 });
+
 line("Willkommen! Tippe help, um zu starten.", "l-ok");
 </script>
 </body>
